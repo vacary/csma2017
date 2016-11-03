@@ -39,6 +39,9 @@ $^2$ LMGC, Université de Montpellier, frederic.dubois@umontpellier.fr \\
 \usetikzlibrary{calc}
 \usepackage{mathtools}
 \usepackage{subfig,float}
+\usepackage{siunitx}
+
+\newcommand\red[1]{\textcolor{red}{#1}}
 % ----------------------------------------------------------------------
 \begin{document}
 % ----------------------------------------------------------------------
@@ -60,7 +63,7 @@ Pour les systèmes de corps rigides, qui sont pour la plupart fortement hypersta
 
 Dans le cas de système de corps flexibles, discrétisés par exemple par des éléments finis, il est facile de réduire ce degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système de façon à éviter les contraintes dépendantes au contact. Ceci peut par exemple se faire en raffinant les maillages a contact tout en contrôlant le nombre de point de contact générés.
 %
-Dans cette contribution, on montrer qu'il devient alors intéressant d'utiliser des méthodes de Newton non lisses pour résoudre le problème discret surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-4}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindres. Dans ce travail, on essaye aussi de montrer qu'il peut être intéressant d'introduire \marginpar{voir si on peut le faire} un modèle de comportement élastique dans un système rigide afin de profiter des avantages d'un point de vue numériques des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réaction. En préférant des méthodes de Newton non--lisses, on améliore aussi fortement le coût de calcul.
+Dans cette contribution, on montrer qu'il devient alors intéressant d'utiliser des méthodes de Newton non lisses pour résoudre le problème discret surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-4}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindres. Dans ce travail, on essaye aussi de montrer qu'il peut être intéressant d'introduire \marginpar{\red{voir si on peut le faire}} un modèle de comportement élastique dans un système rigide afin de profiter des avantages d'un point de vue numériques des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réaction. En préférant des méthodes de Newton non--lisses, on améliore aussi fortement le coût de calcul.
 
 
 \paragraph{Formulation du problème}
@@ -194,17 +197,6 @@ avec $W = H^\top M^{-1} H \in \RR^{3n_c\times 3n_c}$ la matrice de Delassus et $
 \section{Méthodes numériques de résolution}
 Rappelons brièvement les caractéristiques des méthodes utilisées dans cette étude. Pour plus de détails, on pourra consulter~\cite{Acary.Brogliato2008}.
 
-\paragraph{Méthodes de projection de type Gauss-Seidel} La méthode de Gauss--Seidel avec projection est décrite en détail dans~\cite{Mitsopoulou.Doudoumis1987,Jourdan.Alart.ea98}. Elle consiste en une décomposition du problème contact par contact qui permet de calculer à l'itération $k$ les inconnues du contact $\alpha$ en résolvant le problème suivant 
-\begin{equation}
-  \label{eq:pgs-1}
-  \begin{array}{c}
-  u^{\alpha}_{k+1} = W^{\alpha\alpha} r^{\alpha}_{k+1} + \sum_{\beta < \alpha}W^{\alpha\beta} r^{\beta}_{k+1} + \sum_{\beta > \alpha}W^{\alpha\beta} r^{\beta}_{k} +  q^\alpha,\\[1mm] 
-  \hat u^{\alpha}_{k+1} =u^{\alpha}_{k+1} + g(u^{\alpha}_{k+1}), \\[1mm]
-   K^{\alpha,\star} \ni {\hat u^{\alpha}_{k+1}} \perp r^{\alpha}_{k+1} \in K^\alpha.
- \end{array}
-\end{equation}
-La résolution du problème local au contact~(\ref{eq:pgs-1}) peut se faire de manière analytique, ou en utilisant une autre méthode numérique. Dans cet article, on utilisera localement une méthode de Newton non--lisse décrite dans la suite.
-
 \paragraph{Méthodes de Newton non--lisses} Les méthodes  de Newton non--lisses sont basées sur une réécriture du problème sous la forme d'une équation $F(r)=0$, dont les racines sont les solutions du problème original. Parmi les exemples les plus connus de ces fonctions, on peut citer la fonction de P. Alart et A. Curnier~\cite{Alart.Curnier1991}:
 \begin{equation}
   \label{eq:AC-1}
@@ -238,6 +230,34 @@ ou encore la fonction de Fisher-Burmeister. Partant de ces formulations, il conv
   \label{eq:NSN3}
   r_{k+1}  =  r_k -  \Phi^{-1}(r_k) (F(r_k)).
 \end{equation}
+Dans cet article, nous utilisons MUMPS~\cite{} pour la résolution des systèmes linéaires.
+
+\paragraph{Méthodes de projection de type Gauss-Seidel} La méthode de Gauss--Seidel avec projection est décrite en détail dans~\cite{Mitsopoulou.Doudoumis1987,Jourdan.Alart.ea98}. Elle consiste en une décomposition du problème contact par contact qui permet de calculer à l'itération $k$ les inconnues du contact $\alpha$ en résolvant le problème suivant 
+\begin{equation}
+  \label{eq:pgs-1}
+  \begin{array}{c}
+  u^{\alpha}_{k+1} = W^{\alpha\alpha} r^{\alpha}_{k+1} + \sum_{\beta < \alpha}W^{\alpha\beta} r^{\beta}_{k+1} + \sum_{\beta > \alpha}W^{\alpha\beta} r^{\beta}_{k} +  q^\alpha,\\[1mm] 
+  \hat u^{\alpha}_{k+1} =u^{\alpha}_{k+1} + g(u^{\alpha}_{k+1}), \\[1mm]
+   K^{\alpha,\star} \ni {\hat u^{\alpha}_{k+1}} \perp r^{\alpha}_{k+1} \in K^\alpha.
+ \end{array}
+\end{equation}
+La résolution du problème local au contact~(\ref{eq:pgs-1}) peut se faire de manière analytique, ou en utilisant une autre méthode numérique. Dans cet article, on utilisera localement une méthode de Newton non--lisse comme décrite ci--dessus ou des itérations de points fixe de $F_\nat(r)-r$.
+
+\paragraph{Nomenclature} Dans la suite, les méthodes utilisées sont nommées comme dans le Tableau~\ref{tab:nomenclature}
+\begin{table}
+  \centering
+  \begin{tabular}{ll}
+    $\sf\small NSN-AC-NLS$ & Méthode de Newton non--lisse utilisant~(\ref{eq:AC-1}) sans recherche linéaire \\
+    $\sf\small NSN-JM-NLS$ & Méthode de Newton non--lisse utilisant~(\ref{eq:MJ-II}) sans recherche linéaire \\
+    $\sf\small NSN-NM-NLS$ & Méthode de Newton non--lisse utilisant~(\ref{eq:natural-II}) sans recherche linéaire \\
+    $\sf NSN-AC-NLS-HYBRID$ & Méthode $\sf NSN-AC-NLS$ avec  un pré--conditionnement par $100$ itérations de NSGS-AC \\
+    $\sf NSGS-AC$ & Méthode de Gauss Seidel avec NSN-AC-NLS pour méthode locale\\
+    $\sf NSGS-FP-VI-UPK$ & Méthode de Gauss Seidel avec itération de points fixe de $F_\nat(r)-r$\\
+  \end{tabular}
+  \caption{Nomenclature des méthodes utilisées}
+  \label{tab:nomenclature}
+\end{table}
+
 
 \paragraph{Mesure d'erreur} Afin de comparer la convergence des méthodes, nous utilisons un critère d'arrêt à une précision utilisateur $\epsilon$ basée sur la fonction naturelle pour les problèmes de complémentarité du second ordre:
 \begin{equation}
@@ -254,7 +274,7 @@ Cette mesure d'erreur est justifiée plus amplement dans \cite{Facchinei.Pang200
 où $\tau$ est adapté en ligne pour atteindre le critère~(\ref{eq:stopping-criteria-full}).
 
 
-\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in mathcal S$, on définit un critère de performance $t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. Nous utilisons aussi une temps de calcul maximum. Si la précision n'est pas atteinte, le critère est égal à $+\infty$. On définit le rapport de performance par:  
+\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in \mathcal S$, on définit un critère de performance $t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. Nous utilisons aussi une temps de calcul maximum. Si la précision n'est pas atteinte, le critère est égal à $+\infty$. On définit le rapport de performance par:  
 \begin{equation}
  r_{p, s} = \frac{t_{p,s}}{\text{min}\, \{t_{p,s}, \, \, s \in S\}} \, .
 \end{equation}
@@ -262,21 +282,36 @@ Enfin on définit la probabilité  $\rho_s(\tau)$ pour une méthode $s \in S$ qu
 \begin{equation}
  \rho_s(\tau) = \frac{1}{n_p} \text{size} \{p \in P, \, \, r_{p, s} \leq \tau\} \geq 1.
 \end{equation}
-On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problème en temps long. Les fonctions $\tau \rightarrow \rho_s(\tau) $ sont des fonctions croissantes dont  on tracera les graphes appelés  profils de performance pour une plage de $\tau$. 
+On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problème en temps long. Les fonctions $\tau \rightarrow \rho_s(\tau) $ sont des fonctions croissantes dont  on tracera les graphes appelés profils de performance pour une plage de $\tau$. 
 
-\paragraph{Logiciels et FClib}
+
 
 \section{Comparaison sur des solides élastiques}
 
-\subsection{La murette}
+\paragraph{La murette}
 
-\begin{figure}
+L'exemple choisi pour illustrer le comportement de solveurs est une modélisation d'une  maçonnerie en appareil régulier composée  de 12 blocs et soumis à un chargement de cisaillement illustrée à la figure~\ref{fig:LowWall_FEM}. Les blocs sont maillés par des éléments finis linéaires avec un comportement élastique linéaire ($\rho= \num{2000}\si{\kilogram\per\cubic\metre}, E=\num{2.2e+9}\si{\pascal} ,\nu = 0.2$). L'interface entre les blocs est modélisée par du frottement de Coulomb avec du contact unilatéral.  Le coefficient de frottement entre les blocs est de $0.83$ et entre les blocs et les supports de $0.53$. Le support du bas est fixe. Sur le support on applique un effort  maximum de compression de $30000 \si{\newton}$ et une vitesse tangente de cisaillement de $\num{1e-3}\si{\meter\per\second}$.
+\red{verifier la description
+  \begin{itemize}
+  \item nombre et type d'éléments
+  \end{itemize}
+}
+\begin{figure}[htbp]
   \centering
   \includegraphics[height=0.2\textheight]{./figure/LowWall_FEM.png}
   \caption{Une murette}
   \label{fig:LowWall_FEM}
 \end{figure}
-\subsection{Résultats}
+
+\paragraph{Génération d'exemples par simulation et logiciels}
+
+Le système est modélisé et simulé par le logiciel LMGC90. A chaque pas de temps, on recoud le problème discret de frottement avec Siconos/numerics et on exporte le problème discret à résoudre dans un fichier au format FClib. De cet collection d'exemples, on avons sélectionné 50 problèmes de difficulté graduée pour la méthode de Newton non--lisse.
+
+ LMGC90~\cite{} est ... . L'implantation des méthodes de résolution est faite dans Siconos~\cite{??} qui est un logiciel open--source de modélisation et de simulation des systèmes dynamiques non lisse  Enfin FCLib~\cite{??} est un format et une collection ouverte de problèmes de frottement qui permet de comparer des méthodes des résolution sur une large base d'exemples.
+
+\paragraph{Résultats}
+
+
 % \begin{figure}
 %   \centering
 %   \includegraphics{figure/LowWall_FEM.1e-3.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}
@@ -307,32 +342,34 @@ On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s
 % \end{figure}
 
 \begin{figure}
-  \centering
-   \subfloat[précision de $10^{-3}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-3.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-3.simple}}
-   \subfloat[précision de $10^{-4}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-4.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-4.simple}}\\
-   \subfloat[précision de $10^{-6}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-6.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-6.simple}}
-   \subfloat[précision de $10^{-8}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-8.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-8.simple}}
-   \includegraphics{figure/LowWall_FEM.1e-8.with_guess/simple/profile-LMGC_LowWall_FEM_legend.pdf}
-  \caption{Comparaison entre le solveur NSGS-AC et NSN-AC pour différentes précisions}
+  \centering 
+  \subfloat[précision $\epsilon = 10^{-2}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-2.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-3.simple}}
+   \subfloat[précision $\epsilon = 10^{-3}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-3.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-3.simple}}\\
+   \subfloat[précision $\epsilon =  10^{-4}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-4.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-4.simple}}
+   \subfloat[précision $\epsilon = 10^{-6}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-6.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-6.simple}}\\
+   % \subfloat[précision $\epsilon = 10^{-8}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-8.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-8.simple}}\\
+   \includegraphics{figure/LowWall_FEM.1e-2.with_guess/simple/profile-LMGC_LowWall_FEM_legend.pdf}
+  \caption{Comparaison entre les méthodes itérative de type projection et les méthodes de Newton non--lisses pour différentes précisions}
   \label{fig:LowWall_FEM.simple}
 \end{figure}
 
 
+% \begin{figure}
+%   \centering
+%   \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsn_nls/profile-LMGC_LowWall_FEM.pdf}
+%   \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsn_nls/profile-LMGC_LowWall_FEM_legend.pdf}
+%   \caption{Comparaison des solveurs NSN-*-NLS pour une précision de $10^{-4}$}
+%   \label{fig:LowWall_FEM.1e-4.nsn_nls}
+% \end{figure}
+% \begin{figure}
+%   \centering
+%   \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsgs/profile-LMGC_LowWall_FEM.pdf}
+%   \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsgs/profile-LMGC_LowWall_FEM_legend.pdf}
+%   \caption{Comparaison des solveurs NSGS pour une précision de $10^{-4}$}
+%   \label{fig:LowWall_FEM.1e-4.nsgs}
+% \end{figure}
 
-\begin{figure}
-  \centering
-  \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsn_nls/profile-LMGC_LowWall_FEM.pdf}
-  \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsn_nls/profile-LMGC_LowWall_FEM_legend.pdf}
-  \caption{Comparaison des solveurs NSN-*-NLS pour une précision de $10^{-4}$}
-  \label{fig:LowWall_FEM.1e-4.nsn_nls}
-\end{figure}
-\begin{figure}
-  \centering
-  \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsgs/profile-LMGC_LowWall_FEM.pdf}
-  \includegraphics{figure/LowWall_FEM.1e-4.with_guess/nsgs/profile-LMGC_LowWall_FEM_legend.pdf}
-  \caption{Comparaison des solveurs NSGS pour une précision de $10^{-4}$}
-  \label{fig:LowWall_FEM.1e-4.nsgs}
-\end{figure}
+
 
 \section{Comparaison sur des solides rigides}
 
@@ -340,7 +377,11 @@ On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s
 
 \section{Conclusion}
 
-parralelisme.
+intégration du non-linéaire de comportement ou géométrique
+
+parallélisme.
+
+
 \subsection{Références bibliographiques}
 
 % Les références sont à insérer en fin de document, numérotées par ordre alphabétique des auteurs. Trois exemples de références sont proposés : un article \cite{article} et un acte \cite{acte} et un livre  \cite{livre}.
