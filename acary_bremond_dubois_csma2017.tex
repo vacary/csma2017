@@ -203,26 +203,26 @@ Rappelons brièvement les caractéristiques des méthodes utilisées dans cette 
    K^{\alpha,\star} \ni {\hat u^{\alpha}_{k+1}} \perp r^{\alpha}_{k+1} \in K^\alpha.
  \end{array}
 \end{equation}
-La résolution du problème local au contact~\ref{eq:pgs-1} peut se faire de manière analytique, ou en utilisant une autre méthode numérique. Dans cet article, on utilisera localement une méthode de Newton non--lisse décrite dans la suite.
+La résolution du problème local au contact~(\ref{eq:pgs-1}) peut se faire de manière analytique, ou en utilisant une autre méthode numérique. Dans cet article, on utilisera localement une méthode de Newton non--lisse décrite dans la suite.
 
-\paragraph{Méthodes de Newton non--lisses} Les méthodes  de Newton non--lisses sont basées sur un réécriture du problème sous la forme d'une équation $F(r)=0$, dont les racines sont les solutions du problème original. Parmi les exemples les plus connus de ces fonctions, on peut citer la fonction de P. Alart et A. Curnier~\cite{Alart.Curnier1991}:
+\paragraph{Méthodes de Newton non--lisses} Les méthodes  de Newton non--lisses sont basées sur une réécriture du problème sous la forme d'une équation $F(r)=0$, dont les racines sont les solutions du problème original. Parmi les exemples les plus connus de ces fonctions, on peut citer la fonction de P. Alart et A. Curnier~\cite{Alart.Curnier1991}:
 \begin{equation}
   \label{eq:AC-1}
  F_\ac(r) \coloneqq  
   \left[
   \begin{array}{l} 
     r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n  (Wr+q)_\n) = 0, \\
-    r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )=0,\quad \rho_n>0, \rho_\t>0
+    r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )=0
   \end{array}
-  \right] =0
+  \right] =0,\quad \rho_n>0, \rho_\t>0,
 \end{equation}
-avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} D(\mu^{\alpha} (r_{\n}^\alpha)_+)$. Une version similaire peut aussi être utilisée est la fonction proposée par M. Jean et J.J. Moreau~\cite{Jean.Moreau1987}
+avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ r_\t \in \RR^2 \mid  \|r_t\| \leq \mu (r_\n)_+  \}$. La fonction $P_X$ représente la projection euclidienne sur un convexe $X$. Une version similaire peut aussi être utilisée est la fonction proposée par M. Jean et J.J. Moreau~\cite{Jean.Moreau1987}
 \begin{equation}
   \label{eq:MJ-II}
     F_{\mjtwo}(r) \coloneqq \left[ \begin{array}{c}
     r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n (W r +  q)_\n) \\
     r_\t - P_{D(\mu, (r_{\n})_+)}(r_\t - \rho_\t (Wr+q)_\t   ) 
-  \end{array}\right] =0.
+  \end{array}\right] =0,\quad \rho_n>0, \rho_\t>0.
 \end{equation}
  D'autres fonctions de complémentarité peuvent aussi utilisées comme la fonction naturelle:
 \begin{equation}
@@ -233,19 +233,28 @@ avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} D(\
   \end{array}\right] 
   = 0, \quad \rho >0
 \end{equation}
-où encore la fonction de Fisher-Burmeister. Partant de ces formulations sous forme de racines d'équation, le plus souvent non lisse, il convient ensuite de calculer(sélectionner) un élément régulier $\Phi$ du sous--différentiel de $F$ au point $r$, $\Phi(r) \in \partial F(r)$ et d'effectuer les itérations de Newton suivantes:
+ou encore la fonction de Fisher-Burmeister. Partant de ces formulations, il convient ensuite de calculer(sélectionner) un élément régulier $\Phi$ du sous--différentiel de $F$ au point $r$, $\Phi(r) \in \partial F(r)$ et d'effectuer les itérations de Newton suivantes:
 \begin{equation}
   \label{eq:NSN3}
   r_{k+1}  =  r_k -  \Phi^{-1}(r_k) (F(r_k)).
 \end{equation}
 
-\paragraph{Mesure d'erreur} Afin de comparer la convergence des méthodes, nous utilisons une norme d'erreur relative unique basée sur le fonction naturelle pour les problèmes de complémentarité du second ordre:
+\paragraph{Mesure d'erreur} Afin de comparer la convergence des méthodes, nous utilisons un critère d'arrêt à une précision utilisateur $\epsilon$ basée sur la fonction naturelle pour les problèmes de complémentarité du second ordre:
 \begin{equation}
-   e = \displaystyle\frac{\|F_\nat(r)\|}{1+ \|q\|}
+  \label{eq:stopping-criteria-full}
+   e = \displaystyle\frac{\|F_\nat(r)\|}{\|q\|} < \epsilon,
 \end{equation}
-Cette mesure d'erreur est justifiée plus amplement dans \cite{Facchinei.Pang2003}
+en supposant que le problème n'est pas dégénéré($\|q\| \neq 0$).
+%
+Cette mesure d'erreur est justifiée plus amplement dans \cite{Facchinei.Pang2003}. Dans le cas des méthodes itératives de projection, le coût de calcul de $F_\nat(r)$ est élevé par rapport une itération. Nous utilisons un critère d'arrêt du type 
+\begin{equation}
+  \label{eq:stopping-criteria-light}
+  \displaystyle\frac{\|r_{k+1}- r_{k}\|}{\|r_{k+1}\|} < \tau,
+\end{equation}
+où $\tau$ est adapté en ligne pour atteindre le critère~(\ref{eq:stopping-criteria-full}).
 
-\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in mathcal S$, on définit un critère de performance $\t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. Nous utilisons aussi une temps de calcul maximum. Si la précision n'est pas atteinte, le critère est égal à $+\infty$. On définit le rapport de performance par:  
+
+\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in mathcal S$, on définit un critère de performance $t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. Nous utilisons aussi une temps de calcul maximum. Si la précision n'est pas atteinte, le critère est égal à $+\infty$. On définit le rapport de performance par:  
 \begin{equation}
  r_{p, s} = \frac{t_{p,s}}{\text{min}\, \{t_{p,s}, \, \, s \in S\}} \, .
 \end{equation}
@@ -253,7 +262,7 @@ Enfin on définit la probabilité  $\rho_s(\tau)$ pour une méthode $s \in S$ qu
 \begin{equation}
  \rho_s(\tau) = \frac{1}{n_p} \text{size} \{p \in P, \, \, r_{p, s} \leq \tau\} \geq 1.
 \end{equation}
-On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problème en temps long. Dans la suite, on tracera les profils de performance pour une plage de $\tau$. Ce sont des courbes croissantes. 
+On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problème en temps long. Les fonctions $\tau \rightarrow \rho_s(\tau) $ sont des fonctions croissantes dont  on tracera les graphes appelés  profils de performance pour une plage de $\tau$. 
 
 \paragraph{Logiciels et FClib}
 
