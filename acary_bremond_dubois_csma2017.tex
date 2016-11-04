@@ -316,7 +316,7 @@ Pour une précision relativement faible de $10^{-2}$, Les performances des méth
 
 Pour une précision de $10^{-3}$, toutes les méthodes de Newton non--lisses sont plus performantes. Elles sont les plus rapides et ne posent pas de problème de robustesse. La méthode {\sf\small NSN-NM-NLS} est la moins performante des méthodes de Newton. On peut noter que la méthode {\sf\small NSN-AC-NLS-HYBRID}  est la plus performante et qu'elle est en moyenne 4 fois plus performante que la méthode  {\sf\small NSGS-AC}. 
 
-Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec des méthodes de Newton qui sont en moyenne $20$ fois et respectivement $40$ fois plus performantes que les méthodes itératives de projection. Un zoom sur les méthodes de Newton montre que leur performance relative reste inchangée. Par contre, la méthode de ${\sf\small NSGS-FP-VI-UPK}$ devient plus performante que la méthode de {\sf\small NSGS-AC} pour une précision de $10^{-6}$.
+Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec des méthodes de Newton qui sont en moyenne $20$ fois et respectivement $40$ fois plus performantes que les méthodes itératives de projection. Un zoom sur les méthodes de Newton montre que leur performance relative reste inchangée. Par contre, la méthode de {\sf\small NSGS-FP-VI-UPK} devient plus performante que la méthode de {\sf\small NSGS-AC} pour une précision de $10^{-6}$.
 
 % \begin{figure}
 %   \centering
@@ -355,7 +355,7 @@ Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec d
    \subfloat[précision $\epsilon = 10^{-6}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-6.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-6.simple}}\\
    % \subfloat[précision $\epsilon = 10^{-8}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-8.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-8.simple}}\\
    \includegraphics{figure/LowWall_FEM.1e-2.with_guess/simple/profile-LMGC_LowWall_FEM_legend.pdf}
-  \caption{Comparaison entre les méthodes itérative de type projection et les méthodes de Newton non--lisses pour différentes précisions}
+  \caption{Comparaison entre les méthodes itératives de type projection et les méthodes de Newton non--lisses pour différentes précisions.}
   \label{fig:LowWall_FEM.simple}
 \end{figure}
 
@@ -385,17 +385,19 @@ Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec d
 
 En conclusion, on peut observer que 
 \begin{itemize}
-\item Pour des précisions relativement élevées (au delà de $10^-4$), les méthodes de Newton lisses sont beaucoup plus performantes pour des systemes multi--corps flexibles.
+\item Pour des précisions relativement élevées (au delà de $10^{-4}$), les méthodes de Newton lisses sont beaucoup plus performantes pour des systèmes multi--corps flexibles.
 \item La méthode {\sf\small NSN-AC-NLS-HYBRID} est la méthode la plus performante des méthodes de Newton. Le pré--conditionnement permet d'accélérer la convergence des premières itérations de Newton.
 
-\item Les méthodes itératives ...
+\item Les méthodes itératives de projection restent intéressantes pour des précisions faibles, mais elles ne permettent pas d'atteindre une précision élevée pour un coût raisonnable.
 \end{itemize}
 
+Les perspectives à ce travail sont les suivantes:
+\begin{itemize}
+\item Dans les simulations de systèmes multi--corps rigides, ils conviendrait d'évaluer l'intérêt de passer à un modèle déformable pour accélérer les calculs. \marginpar{\red{c'était dans l'intro mais on a pas eu le temps ==> reprendre l'intro} }
+\item Les méthodes de Newton non--lisse permettent d'intégrer facilement les comportements non--linéaires de corps ce qui évite une boucle externe de Newton.
+\item Les librairies de calculs des grands systèmes linéaires comme MUMPS qui sont à la base de méthodes de Newton, sont le plus souvent massivement paralléliser. Cela pourrait fournir une alternative en termes de calcul distribué aux méthodes de Gauss--Seidel distribuées.
+\end{itemize}
 
-
-intégration du non-linéaire de comportement ou géométrique
-
-parallélisme.
 
 
 \subsection{Références bibliographiques}
