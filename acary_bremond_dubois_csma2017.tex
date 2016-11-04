@@ -40,6 +40,7 @@ $^2$ LMGC, Université de Montpellier, frederic.dubois@umontpellier.fr \\
 \usepackage{mathtools}
 \usepackage{subfig,float}
 \usepackage{siunitx}
+\usepackage{url}
 
 \newcommand\red[1]{\textcolor{red}{#1}}
 % ----------------------------------------------------------------------
@@ -58,12 +59,15 @@ Dans cette contribution, on se propose d'évaluer la performance des méthodes d
 
 Dans le contexte des systèmes multi--corps avec contact et frottement de Coulomb, le problème de contact frottant discret que l'on obtient a chaque pas de temps après une discrétisation temporelle, ou a chaque pas de chargement en quasi--statique, est généralement résolu par des méthodes itératives de type projection (Jacobi ou Gauss--Seidel projeté). 
 %
-Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatique du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement vers une solution du problème mais si les forces de réaction ne sont pas définies de manière unique. Il est connu que ces méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706, ??}.
+Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatiques du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement, vers une solution du problème même si les forces de réaction ne sont pas définies de manière unique. Il est connu que les méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706}. \marginpar{\red{Une autre citation?}}
 
 
-Dans le cas de système de corps flexibles, discrétisés par exemple par des éléments finis, il est facile de réduire ce degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système de façon à éviter les contraintes dépendantes au contact. Ceci peut par exemple se faire en raffinant les maillages a contact tout en contrôlant le nombre de point de contact générés.
+Dans le cas de système de corps flexibles, discrétisés par exemple par des éléments finis, il est facile de réduire ce degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système. Un des objectifs est de réduire la dépendance des contraintes sur le système. Ceci peut par exemple se faire en raffinant les maillages dans les zones de  contact tout en contrôlant le nombre de point de contact générés.
 %
-Dans cette contribution, on montrer qu'il devient alors intéressant d'utiliser des méthodes de Newton non lisses pour résoudre le problème discret surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-4}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindres. Dans ce travail, on essaye aussi de montrer qu'il peut être intéressant d'introduire \marginpar{\red{voir si on peut le faire}} un modèle de comportement élastique dans un système rigide afin de profiter des avantages d'un point de vue numériques des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réaction. En préférant des méthodes de Newton non--lisses, on améliore aussi fortement le coût de calcul.
+Dans cette contribution, on montre qu'il devient alors intéressant d'utiliser des méthodes de Newton non lisses pour résoudre le problème discret surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-3}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindres.
+
+
+Dans ce travail\marginpar{\red{voir si on peut le faire. supprimer le paragraphe sinon}}, on essaye aussi de montrer qu'il peut être intéressant d'introduire un modèle de comportement élastique dans un système initialement rigide afin de profiter de l'efficacité  numérique des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réaction. En préférant des méthodes de Newton non--lisses, on améliore aussi fortement le coût de calcul.
 
 
 \paragraph{Formulation du problème}
@@ -126,12 +130,12 @@ Considérons un nombre  $n_c\in \NN$ de points de contact tridimensionnel et un 
 \label{fig:local-frame}
 \end{figure}
 
-Pour chaque contact, on définit le cône de Coulomb comme le cone du second ordre suivant:
+Pour chaque contact, on définit le cône de Coulomb comme le cône du second ordre suivant:
 \begin{equation}
   \label{eq:CoulombCone}
-  K^\alpha = \{r^\alpha \in \RR^3 \mid \|r^\alpha_\t\| \leq \mu^\alpha r^\alpha_n\}.
+  K^\alpha = \{r^\alpha \in \RR^3 \mid \|r^\alpha_\t\| \leq \mu^\alpha r^\alpha_\n\}.
 \end{equation}
-où $\mu^\alpha$ est le coefficient de frottement du contact $\alpha$. Sous forme disjonctive, le contact unilatéral en vitesse avec du frottement de Coulomb peut s'écrire
+où $\mu^\alpha$ est le coefficient de frottement du contact $\alpha$. Sous forme disjonctive, le contact unilatéral avec du frottement de Coulomb peut s'écrire en vitesse
 \begin{equation}
   \label{eq:contact-disjunctive}
   \left\{\begin{array}{llr}
@@ -151,7 +155,7 @@ En introduisant la vitesse relative locale modifiée $\hat u^\alpha = u^\alpha +
 \end{equation}
 Le cône $K^{\alpha,\star}$ est le cône dual de $K^\alpha$.
 
-Suite à une discrétisation des équations du mouvement ou d'équilibre, et à une possible linéarisation, on peut relier les variables cinématiques $ {v} \in \RR^n$ aux effort de contact par une relation linéaire, ce qui nous conduit au problème linéaire de complémentarité suivant en cas de contact :
+Suite à une discrétisation des équations du mouvement ou d'équilibre, et à une linéarisation si nécessaire, on peut relier les variables cinématiques $ {v} \in \RR^n$ aux efforts de contact par une relation linéaire, ce qui nous conduit à un  problème linéaire de complémentarité en cas de contact :
 \begin{equation}\label{eq:soccp1-intro}
   \begin{array}{rcl}
     M v = {H} {r} + {f}, &
@@ -172,17 +176,17 @@ g(u) = [[\mu^\alpha  \|u^\alpha_\t\| {\sf N}^\alpha]^\top, \alpha = 1\ldots n_c]
 La matrice $M \in \RR^{n \times n}$ est le plus souvent définie positive. Nous nous placerons dans cet article dans les conditions d'existence de solution comme elles sont données dans~\cite{Klarbring.Pang1998,Acary.ea_ZAMM2011}.
 
 
-\paragraph{Rang de la matrice $H$} Attardons nous un moment sur la matrice $H \in \RR^{n\times 3n_c} $ qui relie les efforts de contact $r$ aux efforts généralisés et de façon duale les vitesse relatives au contact aux vitesses généralisées. Si le nombre de contact est grand en rapport au nombre de degrés de liberté, disons $3 n_c > n$, la matrice $H$ ne peut pas être de rang plein par colonnes. Il en résulte une dépendance linéaire des efforts de contacts et la multiplicité des solutions. Dans le cas des systèmes de corps rigides, cette situation qui est liée a l'hyperstaticité du système est le cas générique. Pensons par exemple à la table a quatre pieds. Naturellement, cette situation peut aussi arriver dans le cas $3 n_c \leq  n$ si des contacts linéairement dépendants sont appliquées au corps. La réduction de rang de cette matrice influence fortement le comportement des méthodes numériques de résolution. 
+\paragraph{Rang de la matrice $H$ et hyperstaticité} Attardons nous un moment sur la matrice $H \in \RR^{n\times 3n_c} $ qui relie les efforts de contact $r$ aux efforts généralisés $R=H r$ et de façon duale les vitesse relatives au contact aux vitesses généralisées $u = H^\top v +w$ . Si le nombre de contact est grand en rapport au nombre de degrés de liberté, disons $3 n_c > n$, la matrice $H$ ne peut pas être de rang plein par colonnes. Il en résulte une dépendance linéaire des efforts de contacts et la multiplicité des solutions. Dans le cas des systèmes de corps rigides, cette situation est liée a l'hyperstaticité du système. Elle est, de plus, la situation générique. Pensons par exemple à une table rigide à quatre pieds sur le sol. Naturellement, cette situation peut aussi arriver dans le cas $3 n_c \leq  n$ si des contraintes linéairement dépendants sont appliquées aux corps. La réduction de rang de cette matrice influence fortement le comportement des méthodes numériques de résolution. 
 
 Il en est de même si on cherche a résoudre le problème réduit aux variables locales au contact:
-\begin{equation}\label{eq:soccp1-intro}
+\begin{equation}\label{eq:soccp2-intro}
   \begin{array}{l}
     u = W r + q,  \\
     \hat u = u + g(u) \\
         K^\star \ni {\hat u} \perp r \in K,
   \end{array}
 \end{equation}
-avec $W = H^\top M^{-1} H \in \RR^{3n_c\times 3n_c}$ la matrice de Delassus et $q\in \RR^{3n_c}$. De ce cas, c'est la matrice $W$ qui n'est plus de rang plein.
+avec $W \coloneqq H^\top M^{-1} H \in \RR^{3n_c\times 3n_c}$ la matrice de Delassus et $q \coloneqq w + H\top M^{-1} f \in \RR^{3n_c}$. De ce cas, c'est la matrice $W$ qui n'est plus de rang plein et les mêmes problèmes sont constatés.
 
 % \begin{itemize}
 % \item Description du problème de frottement discret
@@ -206,15 +210,15 @@ Rappelons brièvement les caractéristiques des méthodes utilisées dans cette 
     r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n  (Wr+q)_\n) = 0, \\
     r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )=0
   \end{array}
-  \right] =0,\quad \rho_n>0, \rho_\t>0,
+  \right] =0,\quad \rho_\n>0, \rho_\t>0,
 \end{equation}
-avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ r_\t \in \RR^2 \mid  \|r_t\| \leq \mu (r_\n)_+  \}$. La fonction $P_X$ représente la projection euclidienne sur un convexe $X$. Une version similaire peut aussi être utilisée est la fonction proposée par M. Jean et J.J. Moreau~\cite{Jean.Moreau1987}
+avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ r_\t \in \RR^2 \mid  \|r_t\| \leq \mu (r_\n)_+  \}$. La fonction $P_X$ représente la projection euclidienne sur un convexe $X$. Une variante  est la fonction proposée par M. Jean et J.J. Moreau~\cite{Jean.Moreau1987} et utilisée dans une méthode de Newton dans~\cite{Christensen.Klarbring.ea1998}
 \begin{equation}
   \label{eq:MJ-II}
     F_{\mjtwo}(r) \coloneqq \left[ \begin{array}{c}
     r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n (W r +  q)_\n) \\
     r_\t - P_{D(\mu, (r_{\n})_+)}(r_\t - \rho_\t (Wr+q)_\t   ) 
-  \end{array}\right] =0,\quad \rho_n>0, \rho_\t>0.
+  \end{array}\right] =0,\quad \rho_\n>0, \rho_\t>0.
 \end{equation}
  D'autres fonctions de complémentarité peuvent aussi utilisées comme la fonction naturelle:
 \begin{equation}
@@ -230,7 +234,7 @@ ou encore la fonction de Fisher-Burmeister. Partant de ces formulations, il conv
   \label{eq:NSN3}
   r_{k+1}  =  r_k -  \Phi^{-1}(r_k) (F(r_k)).
 \end{equation}
-Dans cet article, nous utilisons MUMPS~\cite{} pour la résolution des systèmes linéaires.
+Dans cet article, nous utilisons MUMPS~\cite{Amestoy.ea_PC2006,Amestoy.ea_SIAMMAA2001} pour la résolution des systèmes linéaires.
 
 \paragraph{Méthodes de projection de type Gauss-Seidel} La méthode de Gauss--Seidel avec projection est décrite en détail dans~\cite{Mitsopoulou.Doudoumis1987,Jourdan.Alart.ea98}. Elle consiste en une décomposition du problème contact par contact qui permet de calculer à l'itération $k$ les inconnues du contact $\alpha$ en résolvant le problème suivant 
 \begin{equation}
@@ -243,16 +247,18 @@ Dans cet article, nous utilisons MUMPS~\cite{} pour la résolution des systèmes
 \end{equation}
 La résolution du problème local au contact~(\ref{eq:pgs-1}) peut se faire de manière analytique, ou en utilisant une autre méthode numérique. Dans cet article, on utilisera localement une méthode de Newton non--lisse comme décrite ci--dessus ou des itérations de points fixe de $F_\nat(r)-r$.
 
-\paragraph{Nomenclature} Dans la suite, les méthodes utilisées sont nommées comme dans le Tableau~\ref{tab:nomenclature}
+\paragraph{Nomenclature} Dans la suite, les méthodes utilisées sont nommées comme dans la Table~\ref{tab:nomenclature}.
 \begin{table}
   \centering
   \begin{tabular}{ll}
+    \hline
     {\sf\small NSN-AC-NLS} & Méthode de Newton non--lisse utilisant~(\ref{eq:AC-1}) sans recherche linéaire \\
     {\sf\small NSN-JM-NLS} & Méthode de Newton non--lisse utilisant~(\ref{eq:MJ-II}) sans recherche linéaire \\
     {\sf\small NSN-NM-NLS} & Méthode de Newton non--lisse utilisant~(\ref{eq:natural-II}) sans recherche linéaire \\
     {\sf\small NSN-AC-NLS-HYBRID} & Méthode {\sf\small NSN-AC-NLS} avec  un pré--conditionnement par $100$ itérations de {\sf\small NSGS-AC} \\
     {\sf\small NSGS-AC} & Méthode de Gauss Seidel avec {\sf\small NSN-AC-NLS} pour méthode locale\\
     {\sf\small  NSGS-FP-VI-UPK} & Méthode de Gauss Seidel avec itérations locales de points fixe de $F_\nat(r)-r$\\
+    \hline 
   \end{tabular}
   \caption{Nomenclature des méthodes utilisées}
   \label{tab:nomenclature}
@@ -262,7 +268,7 @@ La résolution du problème local au contact~(\ref{eq:pgs-1}) peut se faire de m
 \paragraph{Mesure d'erreur} Afin de comparer la convergence des méthodes, nous utilisons un critère d'arrêt à une précision utilisateur $\epsilon$ basée sur la fonction naturelle pour les problèmes de complémentarité du second ordre:
 \begin{equation}
   \label{eq:stopping-criteria-full}
-   e = \displaystyle\frac{\|F_\nat(r)\|}{\|q\|} < \epsilon,
+  \displaystyle\frac{\|F_\nat(r)\|}{\|q\|} < \epsilon,
 \end{equation}
 en supposant que le problème n'est pas dégénéré($\|q\| \neq 0$).
 %
@@ -274,7 +280,7 @@ Cette mesure d'erreur est justifiée plus amplement dans \cite{Facchinei.Pang200
 où $\tau$ est adapté en ligne pour atteindre le critère~(\ref{eq:stopping-criteria-full}).
 
 
-\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in \mathcal S$, on définit un critère de performance $t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. Nous utilisons aussi une temps de calcul maximum. Si la précision n'est pas atteinte, le critère est égal à $+\infty$. On définit le rapport de performance par:  
+\paragraph{Profil de performance} Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilisons les profils de performance comme ils sont proposés dans~\cite{DolanMore_MP2002}. Considérons une ensemble $\mathcal P$ de $n_p$ problèmes et $\mathcal S$  de $n_s$ méthodes de résolutions. Pour chaque problème $p\in \mathcal P$ et chaque méthode $s \in \mathcal S$, on définit un critère de performance $t_{p,s}$. Dans notre cas, il s'agira du nombre d'opérations flottantes pour atteindre une précision donnée. De plus, si la précision n'est pas atteinte au bout d'un temps de calcul maximum par problème ($1000\si{\second}$), le critère est égal à $+\infty$. On définit le rapport de performance par:  
 \begin{equation}
  r_{p, s} = \frac{t_{p,s}}{\text{min}\, \{t_{p,s}, \, \, s \in S\}} \, .
 \end{equation}
@@ -290,12 +296,8 @@ On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s
 
 \paragraph{La murette}
 
-L'exemple choisi pour illustrer le comportement de solveurs est une modélisation d'une  maçonnerie en appareil régulier composée  de 12 blocs et soumis à un chargement de cisaillement illustrée à la figure~\ref{fig:LowWall_FEM}. Les blocs sont maillés par des éléments finis linéaires avec un comportement élastique linéaire ($\rho= \num{2000}\si{\kilogram\per\cubic\metre}, E=\num{2.2e+9}\si{\pascal} ,\nu = 0.2$). L'interface entre les blocs est modélisée par du frottement de Coulomb avec du contact unilatéral.  Le coefficient de frottement entre les blocs est de $0.83$ et entre les blocs et les supports de $0.53$. Le support du bas est fixe. Sur le support on applique un effort  maximum de compression de $30000 \si{\newton}$ et une vitesse tangente de cisaillement de $\num{1e-3}\si{\meter\per\second}$.
-\red{verifier la description
-  \begin{itemize}
-  \item nombre et type d'éléments
-  \end{itemize}
-}
+L'exemple choisi pour illustrer le comportement de solveurs est une modélisation d'une  maçonnerie en appareil régulier composée  de 12 blocs et soumis à un chargement de cisaillement illustrée à la figure~\ref{fig:LowWall_FEM}. Les blocs sont maillés par des éléments finis linéaires avec un comportement élastique linéaire ($\rho= \num{2000}\si{\kilogram\per\cubic\metre}, E=\num{2.2e+9}\si{\pascal} ,\nu = 0.2$). L'interface entre les blocs est modélisée par du frottement de Coulomb avec du contact unilatéral.  Le coefficient de frottement entre les blocs est de $0.83$ et entre les blocs et les supports de $0.53$. Le support du bas est fixe. Sur le support du haut on applique un effort  maximum de compression de $30000 \si{\newton}$ et une vitesse tangente de cisaillement de $\num{1e-3}\si{\meter\per\second}$.
+\marginpar{\red{verifier la description. nombre et type d'éléments}} Le nombre de points de contact est $2064$ et le nombre de degré de liberté est $7212$. La matrice $H$ est de rang plein.
 \begin{figure}[htbp]
   \centering
   \includegraphics[height=0.2\textheight]{./figure/LowWall_FEM.png}
@@ -305,14 +307,14 @@ L'exemple choisi pour illustrer le comportement de solveurs est une modélisatio
 
 \paragraph{Génération d'exemples par simulation et logiciels}
 
-Le système est modélisé et simulé par le logiciel LMGC90. A chaque pas de temps, on recoud le problème discret de frottement avec Siconos/numerics et on exporte le problème discret à résoudre dans un fichier au format FClib. De cet collection d'exemples, on avons sélectionné 50 problèmes de difficulté graduée pour la méthode de Newton non--lisse.
+Le système est modélisé et simulé par le logiciel LMGC90. A chaque pas de temps, on résout le problème discret de frottement avec Siconos/numerics et on exporte le problème discret à résoudre dans un fichier au format FClib. De cette collection d'exemples, on extrait  50 problèmes de difficulté graduée pour la méthode de Newton non--lisse.
 
- LMGC90~\cite{} est ... . L'implantation des méthodes de résolution est faite dans Siconos~\cite{??} qui est un logiciel open--source de modélisation et de simulation des systèmes dynamiques non lisse  Enfin FCLib~\cite{??} est un format et une collection ouverte de problèmes de frottement qui permet de comparer des méthodes des résolution sur une large base d'exemples.
+ LMGC90~\cite{dubois2003lmgc90} est une plateforme de d{\'e}veloppement d{\'e}di{\'e}e {\`a} la mod{\'e}lisation des probl{\`e}mes d’interaction. L'implantation des méthodes de résolution est faite dans Siconos~\cite{siconos} qui est un logiciel open--source de modélisation et de simulation des systèmes dynamiques non lisse.  Enfin FCLib~\cite{acary:hal-00945820} est un format et une collection ouverte de problèmes de frottement qui permet de comparer des méthodes des résolution sur une large base d'exemples.
 
 \paragraph{Résultats}
 Sur la figure~\ref{fig:LowWall_FEM.simple}, on représente les profils de performance des méthodes de résolution pour des précisions différentes. 
 
-Pour une précision relativement faible de $10^{-2}$, Les performances des méthodes sont très proches. Les méthodes de Newton non lisses  {\sf\small NSN-AC-NLS}, {\sf\small NSN-JM-NLS} et {\sf\small NSN-AC-NLS-HYBRID} sont légèrement meilleures que {\sf\small NSGS-AC} et {\sf\small NSGS-FP-VI-UPK}. La méthode {\sf\small NSN-AC-NLS-HYBRID} qui utilise un pré--conditionnement apparaît comme étant la plus performante ce qui est logique puisque les méthodes de projection permettent de trouver une solution grossière plus rapidement. La méthode {\sf\small NSN-NM-NLS} est la moins performante.
+Pour une précision relativement faible de $10^{-2}$, les performances des méthodes sont très proches. Les méthodes de Newton non lisses  {\sf\small NSN-AC-NLS}, {\sf\small NSN-JM-NLS} et {\sf\small NSN-AC-NLS-HYBRID} sont légèrement meilleures que {\sf\small NSGS-AC} et {\sf\small NSGS-FP-VI-UPK}. La méthode {\sf\small NSN-AC-NLS-HYBRID} qui utilise un pré--conditionnement apparaît comme étant la plus performante ce qui est logique puisque les méthodes de projection permettent de trouver une solution grossière plus rapidement. La méthode {\sf\small NSN-NM-NLS} est la moins performante.
 
 Pour une précision de $10^{-3}$, toutes les méthodes de Newton non--lisses sont plus performantes. Elles sont les plus rapides et ne posent pas de problème de robustesse. La méthode {\sf\small NSN-NM-NLS} est la moins performante des méthodes de Newton. On peut noter que la méthode {\sf\small NSN-AC-NLS-HYBRID}  est la plus performante et qu'elle est en moyenne 4 fois plus performante que la méthode  {\sf\small NSGS-AC}. 
 
@@ -349,7 +351,7 @@ Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec d
 
 \begin{figure}[htbp]
   \centering 
-  \subfloat[précision $\epsilon = 10^{-2}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-2.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-3.simple}}
+  \subfloat[précision $\epsilon = 10^{-2}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-2.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-2.simple}}
    \subfloat[précision $\epsilon = 10^{-3}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-3.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-3.simple}}\\
    \subfloat[précision $\epsilon =  10^{-4}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-4.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-4.simple}}
    \subfloat[précision $\epsilon = 10^{-6}$]{\includegraphics[width=0.49\textwidth]{figure/LowWall_FEM.1e-6.with_guess/simple/profile-LMGC_LowWall_FEM.pdf}\label{fig:LowWall_FEM.1e-6.simple}}\\
@@ -377,9 +379,9 @@ Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec d
 
 
 
-\section{Comparaison sur des solides rigides}
+% \section{Comparaison sur des solides rigides}
 
-\section{Utilisation des solides élastiques pour améliorer la convergence}
+% \section{Utilisation des solides élastiques pour améliorer la convergence}
 
 \section{Conclusion}
 
@@ -395,18 +397,17 @@ Les perspectives à ce travail sont les suivantes:
 \begin{itemize}
 \item Dans les simulations de systèmes multi--corps rigides, ils conviendrait d'évaluer l'intérêt de passer à un modèle déformable pour accélérer les calculs. \marginpar{\red{c'était dans l'intro mais on a pas eu le temps ==> reprendre l'intro} }
 \item Les méthodes de Newton non--lisse permettent d'intégrer facilement les comportements non--linéaires de corps ce qui évite une boucle externe de Newton.
-\item Les librairies de calculs des grands systèmes linéaires comme MUMPS qui sont à la base de méthodes de Newton, sont le plus souvent massivement paralléliser. Cela pourrait fournir une alternative en termes de calcul distribué aux méthodes de Gauss--Seidel distribuées.
+\item Les librairies de calculs des grands systèmes linéaires comme MUMPS qui sont à la base de méthodes de Newton, sont le plus souvent massivement parallèles. Cela pourrait fournir une alternative en termes de calcul distribué aux méthodes de Gauss--Seidel distribuées.
 \end{itemize}
 
 
 
-\subsection{Références bibliographiques}
+%\subsection{Références bibliographiques}
 
 % Les références sont à insérer en fin de document, numérotées par ordre alphabétique des auteurs. Trois exemples de références sont proposés : un article \cite{article} et un acte \cite{acte} et un livre  \cite{livre}.
 
 
 \bibstyle{plain}
-
 \bibliography{biblio}
 
 % % ----------------------------------------------------------------------
