@@ -43,6 +43,8 @@ $^2$ LMGC, Université de Montpellier, frederic.dubois@umontpellier.fr \\
 \usepackage{url}
 
 \newcommand\red[1]{\textcolor{red}{#1}}
+\newcommand\ndm[1]{\marginpar{\red{#1}}}
+%\newcommand\ndm[1]{}
 % ----------------------------------------------------------------------
 \begin{document}
 % ----------------------------------------------------------------------
@@ -59,7 +61,7 @@ Dans cette contribution, on se propose d'évaluer la performance des méthodes d
 
 Dans le contexte des systèmes multi--corps avec contact et frottement de Coulomb, le problème de contact frottant discret que l'on obtient à chaque pas de temps après une discrétisation temporelle, ou à chaque pas de chargement en quasi--statique, est généralement résolu par des méthodes itératives de type projection (Jacobi ou Gauss--Seidel projeté). 
 %
-Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatiques du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement, vers une solution du problème même si les forces de réaction ne sont pas définies de manière unique. Il est connu que les méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706}. \marginpar{\red{Une autre citation?}}
+Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatiques du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement, vers une solution du problème même si les forces de réaction ne sont pas définies de manière unique. Il est connu que les méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706}. \ndm{Une autre citation?}
 
 
 Dans le cas de systèmes de corps flexibles, discrétisés par exemple par des éléments finis, il est facile de réduire ce degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système. Un des objectifs est de réduire la dépendance des contraintes sur le système. Ceci peut par exemple se faire en raffinant les maillages dans les zones de  contact tout en contrôlant le nombre de points de contacts générés.
@@ -67,7 +69,7 @@ Dans le cas de systèmes de corps flexibles, discrétisés par exemple par des �
 Dans cette contribution, on montre qu'il devient alors intéressant d'utiliser des méthodes de Newton non--lisses pour résoudre le problème discret, surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-3}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindre.
 
 
-Dans ce travail\marginpar{\red{voir si on peut le faire. supprimer le paragraphe sinon}}, on essaye aussi de montrer qu'il peut être intéressant d'introduire un modèle de comportement élastique dans un système initialement rigide afin de profiter de l'efficacité numérique des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réactions. En préférant des méthodes de Newton non--lisses, on améliore ainsi fortement le coût de calcul.
+Dans ce travail\ndm{{voir si on peut le faire. supprimer le paragraphe sinon}}, on essaye aussi de montrer qu'il peut être intéressant d'introduire un modèle de comportement élastique dans un système initialement rigide afin de profiter de l'efficacité numérique des méthodes de Newton. Dans des travaux antérieurs, M. Jean~\cite{Jean1999,Acary.Jean98} avait montré que l'introduction de l'élasticité permettait de réduire le degré d'hyperstaticité et d'améliorer sensiblement la qualité des solutions en termes de forces de réactions. En préférant des méthodes de Newton non--lisses, on améliore ainsi fortement le coût de calcul.
 
 
 \paragraph{Formulation du problème.}
@@ -299,7 +301,7 @@ On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s
 
 \paragraph{La murette.}
 L'exemple choisi pour illustrer le comportement des solveurs est la modélisation d'une maçonnerie en appareil régulier composée de 12 blocs et soumise à un chargement de cisaillement illustrée à la figure~\ref{fig:LowWall_FEM}. Les blocs sont maillés par des éléments finis linéaires avec un comportement élastique linéaire ($\rho= \num{2000}\si{\kilogram\per\cubic\metre}, E=\num{2.2e+9}\si{\pascal} ,\nu = 0.2$). L'interface entre les blocs est modélisée par du frottement de Coulomb avec du contact unilatéral.  Le coefficient de frottement entre les blocs est de $0.83$ et entre les blocs et les supports de $0.53$. Le support du bas est fixe. Sur le support du haut on applique un effort  maximum de compression de $30000 \si{\newton}$ et une vitesse tangente de cisaillement de $\num{1e-3}\si{\meter\per\second}$.
-\marginpar{\red{verifier la description. nombre et type d'éléments}} Le nombre de points de contact est $2064$ et le nombre de degré de liberté est $7212$. La matrice $H$ est de rang plein.
+\ndm{{verifier la description. nombre et type d'éléments}} Le nombre de points de contact est $2064$ et le nombre de degré de liberté est $7212$. La matrice $H$ est de rang plein.
 \begin{figure}[htbp]
   \centering
   \includegraphics[height=0.2\textheight]{./figure/LowWall_FEM.png}
@@ -396,7 +398,7 @@ En conclusion, on peut observer que
 \ \\
 Les perspectives à ce travail sont les suivantes:
 \begin{itemize}
-\item évaluer l'intérêt de passer à un modèle déformable pour accélérer les calculs de systèmes multi--corps rigides. \marginpar{\red{c'était dans l'intro mais on a pas eu le temps ==> reprendre l'intro} }
+\item évaluer l'intérêt de passer à un modèle déformable pour accélérer les calculs de systèmes multi--corps rigides. \ndm{{c'était dans l'intro mais on a pas eu le temps ==> reprendre l'intro} }
 \item intégrer le comportement non--linéaire de corps dans les méthodes de Newton non--lisse. Ceci permettrait d'éviter une boucle externe de Newton.
 \item utiliser les potentialités massivement parallèles des librairies de calculs de grands systèmes linéaires comme MUMPS qui sont utilisées dans les méthodes de Newton. Cela pourrait fournir une alternative aux méthodes de Gauss--Seidel distribuées.
 \end{itemize}
