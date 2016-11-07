@@ -178,7 +178,7 @@ La matrice $M \in \RR^{n \times n}$ est le plus souvent définie positive. Nous 
 \paragraph{Rang de la matrice $H$ et hyperstaticité.} 
 Attardons nous un moment sur la matrice $H \in \RR^{n\times 3n_c} $ qui relie les efforts de contact $r$ aux efforts généralisés $R=H r$ et de façon duale les vitesses relatives au contact aux vitesses généralisées $u = H^\top v +w$ . Si le nombre de contacts est grand en rapport au nombre de degrés de liberté, disons $3 n_c > n$, la matrice $H$ ne peut pas être de rang plein par colonnes. Il en résulte une dépendance linéaire des efforts de contacts et une multiplicité de solutions. Dans le cas des systèmes de corps rigides, cette situation est liée a l'hyperstaticité du système. Elle est, de plus, la situation générique. Pensons par exemple à une table rigide à quatre pieds sur le sol. Naturellement, cette situation peut aussi arriver dans le cas $3 n_c \leq  n$ si des contraintes linéairement dépendantes sont appliquées aux corps. La réduction de rang de cette matrice influence fortement le comportement des méthodes numériques de résolution. 
 
-Il en est de même si on cherche a résoudre le problème réduit aux variables locales au contact:
+Il en est de même si on cherche à résoudre le problème réduit aux variables locales au contact:
 \begin{equation}\label{eq:soccp2-intro}
   \begin{array}{l}
     u = W r + q,  \\
