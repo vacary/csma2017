@@ -43,8 +43,8 @@ $^2$ LMGC, Université de Montpellier, frederic.dubois@umontpellier.fr \\
 \usepackage{url}
 
 \newcommand\red[1]{\textcolor{red}{#1}}
-\newcommand\ndm[1]{\marginpar{\red{#1}}}
-%\newcommand\ndm[1]{}
+%\newcommand\ndm[1]{\marginpar{\red{#1}}}
+\newcommand\ndm[1]{}
 % ----------------------------------------------------------------------
 \begin{document}
 % ----------------------------------------------------------------------
@@ -61,10 +61,10 @@ Dans cette contribution, on se propose d'évaluer la performance des méthodes d
 
 Dans le contexte des systèmes multi--corps avec contact et frottement de Coulomb, le problème de contact frottant discret que l'on obtient à chaque pas de temps après une discrétisation temporelle, ou à chaque pas de chargement en quasi--statique, est généralement résolu par des méthodes itératives de type projection (Jacobi ou Gauss--Seidel projeté). 
 %
-Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatiques du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement, vers une solution du problème même si les forces de réaction ne sont pas définies de manière unique. Il est connu que les méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706}. \ndm{Une autre citation?}
+Pour les systèmes de corps rigides, qui sont pour la plupart fortement hyperstatiques du fait d'un grand nombre de contacts en regard du nombre de degrés de liberté, les méthodes itératives jouissent de bonnes propriétés de robustesse. Elles permettent de converger de façon sure, mais lentement, vers une solution du problème même si les forces de réaction ne sont pas définies de manière unique. Par contre, il est connu que les méthodes de Newton non--lisses sont totalement inopérantes pour les systèmes rigides hyperstatiques~\cite{bertailsdescoubes:inria-00557706}. \ndm{Une autre citation?}
 
 
-Dans le cas de systèmes de corps flexibles, discrétisés par exemple par des éléments finis, il est facile de réduire ce degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système. Un des objectifs est de réduire la dépendance des contraintes sur le système. Ceci peut par exemple se faire en raffinant les maillages dans les zones de  contact tout en contrôlant le nombre de points de contacts générés.
+Dans le cas de systèmes de corps flexibles, discrétisés par exemple par des éléments finis, il est possible de réduire le degré d'hyperstaticité en augmentant le nombre de degrés de liberté du système. Cette technique a pour effet d'augmenter le rang des matrices jacobiennes des contraintes, et donc de diminuer la dépendance linéaire entre les contacts. Ceci peut par exemple se faire en raffinant les maillages dans les zones de  contact tout en contrôlant le nombre de points de contacts générés.
 %
 Dans cette contribution, on montre qu'il devient alors intéressant d'utiliser des méthodes de Newton non--lisses pour résoudre le problème discret, surtout si on veut atteindre des niveaux de précision relative supérieurs à $10^{-3}$.  Alors que les méthodes itératives de type projection continuent à converger lentement, les méthodes de Newton retrouvent leurs convergences quadratiques locales pour des systèmes fortement réguliers. Cela permet d'atteindre des niveaux de précisions arbitraires pour un coût de calcul bien moindre.
 
@@ -174,11 +174,11 @@ et $K^\star$ son dual. La fonction $g(u)$ est une fonction non--lisse définie p
 \begin{equation}
 g(u) = [[\mu^\alpha  \|u^\alpha_\t\| {\sf N}^\alpha]^\top, \alpha = 1\ldots n_c]^\top\label{eq:gg}. 
 \end{equation}
-La matrice $M \in \RR^{n \times n}$ est le plus souvent définie positive. Nous nous placerons dans cet article dans les conditions d'existence de solution comme elles sont données dans~\cite{Klarbring.Pang1998,Acary.ea_ZAMM2011}.
+La matrice $M \in \RR^{n \times n}$ est le plus souvent définie positive. Nous nous placerons dans cet article dans les conditions d'existence de solutions au problème~\eqref{eq:soccp1-intro} comme elles sont données dans~\cite{Klarbring.Pang1998,Acary.ea_ZAMM2011}.
 
 
 \paragraph{Rang de la matrice $H$ et hyperstaticité.} 
-Attardons nous un moment sur la matrice $H \in \RR^{n\times 3n_c} $ qui relie les efforts de contact $r$ aux efforts généralisés $R=H r$ et de façon duale les vitesses relatives au contact aux vitesses généralisées $u = H^\top v +w$ . Si le nombre de contacts est grand en rapport au nombre de degrés de liberté, disons $3 n_c > n$, la matrice $H$ ne peut pas être de rang plein par colonnes. Il en résulte une dépendance linéaire des efforts de contacts et une multiplicité de solutions. Dans le cas des systèmes de corps rigides, cette situation est liée a l'hyperstaticité du système. Elle est, de plus, la situation générique. Pensons par exemple à une table rigide à quatre pieds sur le sol. Naturellement, cette situation peut aussi arriver dans le cas $3 n_c \leq  n$ si des contraintes linéairement dépendantes sont appliquées aux corps. La réduction de rang de cette matrice influence fortement le comportement des méthodes numériques de résolution. 
+Attardons nous un moment sur la matrice $H \in \RR^{n\times 3n_c} $ qui relie les efforts de contact $r$ aux efforts généralisés $R=H r$ et de façon duale les vitesses relatives au contact aux vitesses généralisées $u = H^\top v +w$ . Si le nombre de contacts est grand en rapport au nombre de degrés de liberté, disons $3 n_c > n$, la matrice $H$ ne peut pas être de rang plein par colonnes. Il en résulte une dépendance linéaire des efforts de contacts et une multiplicité de solutions pour les efforts. Dans le cas des systèmes de corps rigides, cette situation est liée a l'hyperstaticité du système. Elle est, de plus, la situation générique. Pensons par exemple à une table rigide à quatre pieds sur le sol. Naturellement, cette situation peut aussi arriver dans le cas $3 n_c \leq  n$ si des contraintes linéairement dépendantes sont appliquées aux corps. La réduction de rang de cette matrice influence fortement le comportement des méthodes numériques de résolution. 
 
 Il en est de même si on cherche à résoudre le problème réduit aux variables locales au contact:
 \begin{equation}\label{eq:soccp2-intro}
@@ -210,10 +210,10 @@ Les méthodes  de Newton non--lisses sont basées sur une réécriture du probl�
  F_\ac(r) \coloneqq  
   \left[
   \begin{array}{l} 
-    r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n  (Wr+q)_\n) = 0, \\
-    r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )=0
+    r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n  (Wr+q)_\n) , \\
+    r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )
   \end{array}
-  \right] =0,\quad \rho_\n>0, \rho_\t>0,
+  \right],\quad \rho_\n>0, \rho_\t>0,
 \end{equation}
 avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ r_\t \in \RR^2 \mid  \|r_t\| \leq \mu (r_\n)_+  \}$. La fonction $P_X$ représente la projection euclidienne sur un convexe $X$. Une variante  est la fonction proposée par M. Jean et J.J. Moreau~\cite{Jean.Moreau1987} et utilisée dans une méthode de Newton dans~\cite{Christensen.Klarbring.ea1998}
 \begin{equation}
@@ -221,7 +221,7 @@ avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ 
     F_{\mjtwo}(r) \coloneqq \left[ \begin{array}{c}
     r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n (W r +  q)_\n) \\
     r_\t - P_{D(\mu, (r_{\n})_+)}(r_\t - \rho_\t (Wr+q)_\t   ) 
-  \end{array}\right] =0,\quad \rho_\n>0, \rho_\t>0.
+  \end{array}\right] ,\quad \rho_\n>0, \rho_\t>0.
 \end{equation}
  D'autres fonctions de complémentarité peuvent aussi être utilisées comme la fonction naturelle:
 \begin{equation}
@@ -229,8 +229,7 @@ avec le disque de frottement  $D(\mu,(r_{n})_+) = \prod_{\alpha=1\ldots n_c} \{ 
   F_\nat(r) \coloneqq   \left[
   \begin{array}{l} 
     r - P_{K}\left(r  - \rho (Wr+q + g(Wr+q))\right)
-  \end{array}\right] 
-  = 0, \quad \rho >0
+  \end{array}\right], \quad \rho >0
 \end{equation}
 ou encore la fonction de Fisher-Burmeister. Partant de ces formulations, il convient ensuite de calculer (sélectionner) un élément régulier $\Phi$ du sous--différentiel de $F$ au point $r$, $\Phi(r) \in \partial F(r)$ et d'effectuer les itérations de Newton suivantes:
 \begin{equation}
@@ -275,7 +274,7 @@ Afin de comparer la convergence des méthodes, nous utilisons un critère d'arr�
   \label{eq:stopping-criteria-full}
   \displaystyle\frac{\|F_\nat(r)\|}{\|q\|} < \epsilon,
 \end{equation}
-en supposant que le problème n'est pas dégénéré($\|q\| \neq 0$). \\
+en supposant que le problème n'est pas trivial($\|q\| \neq 0$).
 %
 Cette mesure d'erreur est justifiée plus amplement dans \cite{Facchinei.Pang2003}. Dans le cas des méthodes itératives de projection, le coût de calcul de $F_\nat(r)$ est élevé par rapport à une itération. Nous utilisons un critère d'arrêt du type 
 \begin{equation}
@@ -289,11 +288,11 @@ Pour évaluer l'efficacité d'une méthode par rapport à une autre, nous utilis
 \begin{equation}
  r_{p, s} = \frac{t_{p,s}}{\text{min}\, \{t_{p,s}, \, \, s \in S\}} \, .
 \end{equation}
-Enfin on définit la probabilité  $\rho_s(\tau)$ pour une méthode $s \in S$ que le rapport de perfomance $r_{p, s}$ soit en dessous d'une valeur $\tau \in \mathbb R$ :
+Enfin on définit la probabilité  $\rho_s(\tau)$ pour une méthode $s \in S$ que le rapport de perfomance $r_{p, s}$ soit en dessous d'une valeur $\tau \geq 1$ :
 \begin{equation}
  \rho_s(\tau) = \frac{1}{n_p} \text{size} \{p \in P, \, \, r_{p, s} \leq \tau\}. % \geq 1.
 \end{equation}
-On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problème en temps long. Les fonctions $\tau \rightarrow \rho_s(\tau) $ sont des fonctions croissantes dont  on tracera les graphes appelés profils de performance pour une plage de $\tau$. 
+On peut remarquer que $\rho_s(1)$ représente la probabilité que la méthode $s$ soit la meilleure par rapport aux autres méthodes. La valeur $\rho_s(\tau)$ pour $\tau$ grand caractérise la capacité de la méthode à résoudre un grand nombre de problèmes en temps long, c'est  à dire, la robustesse de la méthode. Les fonctions $\tau \rightarrow \rho_s(\tau) $ sont des fonctions croissantes dont  on tracera les graphes appelés profils de performance pour une plage donnée de $\tau$. 
 
 
 
@@ -310,7 +309,8 @@ L'exemple choisi pour illustrer le comportement des solveurs est la modélisatio
 \end{figure}
 
 \paragraph{Génération d'exemples par simulation et logiciels.}
-Le système est modélisé et simulé par le logiciel LMGC90. A chaque pas de temps, on résout le problème discret de frottement avec Siconos/numerics et on exporte le problème discret à résoudre dans un fichier au format FClib. De cette collection d'exemples, on extrait  50 problèmes de difficulté graduée pour la méthode de Newton non--lisse.
+Le système est modélisé et simulé par le logiciel LMGC90. A chaque pas de temps, on résout le problème discret de frottement avec Siconos/numerics et on exporte le problème discret à résoudre dans un fichier au format FClib. De cette série de problèmes  à
+chaque pas de temps, on extrait  50 problèmes de difficulté graduée pour la méthode de Newton non--lisse.
 
  LMGC90~\cite{dubois2003lmgc90} est une plateforme de d{\'e}veloppement d{\'e}di{\'e}e {\`a} la mod{\'e}lisation des probl{\`e}mes d’interaction. L'implantation des méthodes de résolution est faite dans Siconos~\cite{siconos} qui est un logiciel open--source de modélisation et de simulation des systèmes dynamiques non lisse.  Enfin FCLib~\cite{acary:hal-00945820} est un format et une collection ouverte de problèmes de frottement qui permet de comparer des méthodes de résolution sur une large base d'exemples.
 
@@ -385,7 +385,7 @@ Pour une précision de  $10^{-4}$ et $10^{-6}$, cette tendance s'accentue avec d
 % \section{Comparaison sur des solides rigides}
 
 % \section{Utilisation des solides élastiques pour améliorer la convergence}
-
+\newpage
 \section{Conclusion}
 
 En conclusion, on peut observer que 
