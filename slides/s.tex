@@ -1,0 +1,184 @@
+\documentclass[8pt,red]{beamer}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amsbsy}
+\usepackage{stmaryrd} 
+\usepackage{subeqnarray}
+
+\usepackage{cases}
+
+\usepackage{pifont}
+
+\usepackage{fancyhdr}
+
+\usepackage{lastpage}
+
+
+\usepackage{graphicx}
+%\usepackage{subfloat}
+\usepackage{rotating}
+\usepackage{tikz}
+
+\usetikzlibrary{arrows}
+\usetikzlibrary{calc}
+\usepackage{mathtools}
+
+% \usepackage{algorithm}
+% \usepackage{algorithmic}
+
+\usepackage{siunitx}
+\usepackage{subfig,float}
+\input{macro.tex}
+
+\usepackage{wasysym}
+
+
+
+\setbeamertemplate{theorem}[ams style]
+\setbeamertemplate{theorems}[numbered]
+
+
+\input{theme.tex}
+
+\title{Nonsmooth Newton methods for frictional contact problems in flexible multi-body systems}
+\author{V. Acary, M. Br\'emond, F. Dubois \\ INRIA Rh\^one--Alpes, Grenoble. \\ LMGC Montpellier}
+\date{13\textsuperscript{eme} Colloque National en Calcul des structures \\ [2mm] \today}
+
+\setbeamertemplate 
+{footline} 
+{\quad\hfill\strut\insertsection\quad--\quad\insertframenumber/\inserttotalframenumber\strut\quad\quad} 
+
+\graphicspath{{../figure/}}
+
+\includeonly{%
+%  introduction,
+  fc3d,
+  %existence,
+  numerics,
+  comparison
+}
+
+
+
+%\newtheorem{defn}{Definition}
+%\renewcommand{\thedefn}{\arabic{defn}}
+% \newtheorem{thm}[defn]{Theorem}
+% \newtheorem{corr}[defn]{Corollary}
+% \newtheorem{ass}[defn]{Assumption}
+% \newtheorem{lem}[defn]{Lemma}
+% \newtheorem{rem}[defn]{Remark}
+% \newtheorem{hypo}[defn]{Hypotheses}
+% \newtheorem{exmp}[defn]{Example}
+% \newtheorem{prop}[defn]{Proposition}
+\newcommand{\diag}{\mbox{\rm diag}}
+\newcommand{\co}{\overline{\mathit{co}}}
+\newcommand{\rect}{\overline{\mathit{rect}}}
+\newcommand{\newb}{g}
+
+\renewcommand{\tr}[1]{\textcolor{red}{#1}}
+\def\nat{{\hbox{\sf \tiny{nat}}}}
+\def\ac{{\hbox{\tiny{ac}}}}
+\def\mjtwo{{\hbox{\tiny{mj}}}}
+\begin{document}
+
+\frame{\titlepage
+  \begin{center}
+    \includegraphics[height=0.1\textheight]{../figure/logo-inria.png}\\
+    \includegraphics[height=0.1\textheight]{../figure/logo-lmgc.jpg}
+  \end{center}
+  $$ $$
+}
+
+
+%\frame{\tableofcontents}
+
+\begin{frame}
+  \frametitle{Objectives}
+  
+\end{frame}
+
+\include{fc3d}
+%\frame{\tableofcontents}
+
+\include{existence}
+%\frame{\tableofcontents}
+
+\include{numerics}
+%\frame{\tableofcontents}
+
+\include{comparison}
+
+
+
+
+
+
+
+
+\section{Conclusions \& Perspectives}
+\frame{
+\frametitle{Conclusions \& Perspectives}
+\begin{block}{Conclusions}
+  \begin{enumerate}
+  \item For relatively tight accuracy, nonsmooth Newton methods outperform first order iterative method.
+  \item  {\sf\small NSN-AC-NLS-HYBRID} is the most efficient method
+  \item First order iterative methods are interesting for low accuracy, but are not able to reach tight accuracy,
+  \end{enumerate}
+\end{block}
+\vskip-3mm
+\begin{block}{Perspectives}
+  \begin{enumerate}
+  \item Evaluate the interest to transform rigid model into flexible ones.
+  \item Study the possibility to take into account the possible nonlinear bulk behavior in the Newton loop
+  \item HPC and scalability  of nonsmooth Newton techniques using MUMPS 
+  \item Continue to set up a collection of benchmarks  \ding{220} FCLIB
+  \end{enumerate}
+\end{block}
+
+}
+
+\subsection{FCLIB : a collection of discrete 3D Frictional Contact (FC) problems}
+
+\frame{
+  \frametitle{FCLIB : a collection of discrete 3D Frictional Contact (FC) problems}
+  Our inspiration: MCPLIB or CUTEst
+  \begin{block}
+    {What is FCLIB ?}
+    \begin{itemize}
+    \item A open source collection of Frictional Contact (FC) problems
+      stored in a specific HDF5 format 
+    \item A open source light implementation of Input/Output functions
+      in C Language to read and write problems (Python and Matlab coming soon)
+    \end{itemize}
+  \end{block}
+
+
+  \begin{block}
+    {Goals of the project}
+    Provide a standard framework for testing available and new algorithms for solving discrete frictional contact problems share common formulations of problems in order to exchange data
+\end{block}
+\begin{block}
+    {Call for contribution}
+    \alert{\url{http://fclib.gforge.inria.fr}}
+  \end{block}
+}
+
+\frame
+{
+\centerline{\textcolor{red}{ Thank you for your attention.}}
+}
+
+ 
+\def\newblock{}
+{\scriptsize
+\bibliographystyle{plainnat}
+\bibliography{../Report/biblio,./Biblio/NonSmooth,./Biblio/Contact}
+}
+
+%\include{PWL}
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

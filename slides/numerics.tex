@@ -1,0 +1,136 @@
+
+\section{Numerical solution procedure.}
+\label{Sec:Numerics}
+
+\subsection{Nonsmooth Equations based methods}
+\frame{
+  \frametitle{Nonsmooth Equations based methods}
+  \begin{block}  {Nonsmooth Newton on $F(r)=0$}
+
+    $$r_{k+1}  =  r_k -  \Phi^{-1}(r_k) (F(r_k)), \quad\quad\Phi(r_k) \in \partial F(r_k)$$
+    
+   \begin{itemize}
+     
+   \item Alart--Curnier Formulation~\cite{Alart.Curnier1991}
+     \begin{equation}
+       \label{eq:AC-1}
+       F_\ac(r) \coloneqq  
+       \left[
+         \begin{array}{l} 
+           r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n  (Wr+q)_\n) , \\
+           r_\t - P_{D(\mu, (r_\n - \rho (Wr+q)_\n)_+)}(r_\t - \rho_\t (Wr+q)_\t   )
+         \end{array}
+       \right],\quad \rho_\n>0, \rho_\t>0,
+     \end{equation}
+   \item Jean -- Moreau formulation ~\cite{Jean.Moreau1987,Christensen.Klarbring.ea1998}
+     \begin{equation}
+       \label{eq:MJ-II}
+       F_{\mjtwo}(r) \coloneqq \left[
+         \begin{array}{c}
+           r_\n - P_{\RR^{n_c}_+}(r_\n - \rho_\n (W r +  q)_\n) \\
+           r_\t - P_{D(\mu, (r_{\n})_+)}(r_\t - \rho_\t (Wr+q)_\t   ) 
+         \end{array}\right] ,\quad \rho_\n>0, \rho_\t>0.
+     \end{equation}
+   \item Direct natural map reformulation
+     \begin{equation}
+       \label{eq:natural-II}
+       F_\nat(r) \coloneqq   \left[
+         \begin{array}{l} 
+           r - P_{K}\left(r  - \rho (Wr+q + g(Wr+q))\right)
+         \end{array}\right], \quad \rho >0
+     \end{equation}
+   \end{itemize}
+ MUMPS~\cite{Amestoy.ea_PC2006,Amestoy.ea_SIAMMAA2001} is used for solving linear systems.
+ \end{block}
+}
+
+\subsection{Matrix block--splitting and projection based algorithms}
+\frame{
+  \frametitle{Matrix block-splitting and projection based algorithms \cite{Moreau1994,Jean.Touzot1988}}
+  \begin{block}{Block splitting algorithm with $W^{\alpha\alpha}\in \RR^3$ (Gauss-Seidel)}
+    \begin{equation}\label{EQ:NSGS-local1}
+      \left\{ 
+        \begin{array}{l}
+          {u}^{\alpha}_{i+1} - { W}^{\alpha \alpha} {P}^{\alpha}_{i+1} = {q}^{\alpha} + \displaystyle\sum_{\beta<\alpha}^{~} { W}^{\alpha \beta} {r}^{\beta}_{i+1} + \displaystyle\sum_{\beta >\alpha}^{~} { W}^{\alpha \beta} {r}^{\beta}_{i}\\
+          ~\\
+          \widehat u^{\alpha}_{i+1} = \left[u_{\n,i+1}^{\alpha}+ \mu^{\alpha}\;||u^{\alpha}_{\t,i+1}||, u^{\alpha}_{\t,i+1}\right]^T \\ \\
+          {\bf K}^{\alpha,*} \ni \widehat u^{\alpha}_{i+1}  \perp r^{\alpha}_{i+1} \in {\bf K}^{\alpha} \\
+        \end{array} \right.
+    \end{equation}
+    for all $\alpha \in \{1\ldots m\}$.
+  \end{block}
+  \begin{block}{One contact point problem}
+    \begin{itemize}
+    \item closed form solutions
+    \item Any solver listed before.  
+    \end{itemize}
+  \end{block}
+  
+}
+\begin{frame}
+  \frametitle{Naming convention}
+  \begin{table}
+  \centering
+  \begin{tabular}{lp{0.7\textwidth}}
+    \hline
+    {\sf\small NSN-AC-NLS} & Nonsmooth Newton Method using ~(\ref{eq:AC-1}) without line-search \\
+    {\sf\small NSN-JM-NLS} & Nonsmooth Newton Method using~(\ref{eq:MJ-II}) without line-search \\
+    {\sf\small NSN-NM-NLS} & Nonsmooth Newton Method using~(\ref{eq:natural-II}) without line-search\\
+    {\sf\small NSN-AC-NLS-HYBRID} &Method {\sf\small NSN-AC-NLS} with preconditioning with  $100$ iterations of  {\sf\small NSGS-AC} \\
+    {\sf\small NSGS-AC} & Gauss--Seidel method with {\sf\small NSN-AC-NLS} as local solver\\
+    {\sf\small  NSGS-FP-VI-UPK} & Gauss--Seidel method with fixed point iterations of  $F_\nat(r)-r$\\
+    \hline 
+  \end{tabular}
+  \caption{Naming convention}
+  \label{tab:nomenclature}
+\end{table}
+
+\begin{block}{Error evaluation}
+  \begin{equation}
+    \label{eq:stopping-criteria-full}
+    \displaystyle\frac{\|F_\nat(r)\|}{\|q\|} < \epsilon,
+  \end{equation}
+\end{block}
+
+\end{frame}
+
+
+
+\subsection{Siconos/Numerics}
+\frame{
+\frametitle{Siconos/Numerics}
+\begin{block}
+  {\sc Siconos} Open source software for modelling and simulation of
+  nonsmooth systems
+\end{block}
+\begin{block} {\sc Siconos/Numerics} Collection of C routines to
+  solve FC3D problem
+  \begin{itemize}
+  \item NonSmoothGaussSeidel : VI based projection/splitting
+    algorithm
+  \item TrescaFixedPoint : fixed point algorithm on Tresca fixed
+    point
+  \item LocalAlartCurnier : semi--smooth newton method of
+    Alart--Curnier formulation
+  \item ProximalFixedPoint : proximal point algorithm
+  \item VIFixedPointProjection : VI based fixed-point projection
+   \item VIExtragradient : VI based extra-gradient method
+   \item \ldots
+   \end{itemize}
+ \end{block}
+ \begin{block}{\url{http://siconos.gforge.inria.fr}}
+   use and contribute ...
+ \end{block}
+  
+}
+
+
+
+
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "s"
+%%% End: 
