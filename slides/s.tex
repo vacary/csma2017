@@ -92,7 +92,22 @@
 
 \begin{frame}
   \frametitle{Objectives}
-  
+  \begin{itemize}
+  \item Computation methods for discrete frictional contact problems.
+  \item Rigid multi-body systems:
+    \begin{itemize}
+    \item high order of hyperstaticity
+    \item under-determinancy in the contact forces
+    \item Projection/splitting methods (Jacobi, Gauss--Seidel) are robust but very slow
+    \item Nonsmooth Newton methods fail
+    \end{itemize}
+  \item Flexible multi-body systems:
+    \begin{itemize}
+    \item low order of hyperstaticity
+    \item Nonsmooth methods work efficiently.
+    \end{itemize}
+  \end{itemize}
+  General interest in introducing flexibility in the model for computational efficiency.
 \end{frame}
 
 \include{fc3d}
@@ -118,7 +133,7 @@
 \frametitle{Conclusions \& Perspectives}
 \begin{block}{Conclusions}
   \begin{enumerate}
-  \item For relatively tight accuracy, nonsmooth Newton methods outperform first order iterative method.
+  \item For relatively tight accuracy, nonsmooth Newton methods outperform first order iterative methods.
   \item  {\sf\small NSN-AC-NLS-HYBRID} is the most efficient method
   \item First order iterative methods are interesting for low accuracy, but are not able to reach tight accuracy,
   \end{enumerate}
